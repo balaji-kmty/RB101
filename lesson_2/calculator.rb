@@ -1,9 +1,18 @@
-def prompt(message)
+require 'yaml'
+MESSAGES = YAML.load_file('calc_messages.yml')
+LANGUAGE = 'en'
+
+def messages(message, lang = 'en')
+  MESSAGES[lang][message]
+end
+
+def prompt(key)
+  message = messages(key, LANGUAGE)
   puts "=> #{message}"
 end
 
 def valid_number?(num)
-  num.to_i.to_s == num
+  (num.to_i.to_s == num) || (num.to_f.to_s == num)
 end
 
 def number_get
@@ -13,7 +22,7 @@ def number_get
     if valid_number?(num)
       break
     else
-      prompt'Invalid input, try again: '
+      prompt('invalid_input')
     end
   end
   num
@@ -34,27 +43,27 @@ end
 
 num1 = nil
 num2 = nil
-prompt'Welcome to Calculator!'
+prompt('welcome')
 
 loop do
-  prompt'Enter first number: '
+  prompt('first_number')
   num1 = number_get
 
-  prompt'Enter second number: '
+  prompt('second_number')
   num2 = number_get
 
-  prompt'Enter mathematical operation (+ - * /): '
+  prompt('operation')
   operation = nil
   loop do
     operation = gets.chomp
     if %w(+ - * /).include?(operation)
       break
     else
-      prompt'Invalid input, try again!'
+      prompt('invalid_input')
     end
   end
 
-  prompt"#{operator_to_method(operation)}..."
+  puts "=> #{operator_to_method(operation)}..."
   sleep 0.5
 
   answer = case operation
@@ -68,11 +77,11 @@ loop do
              num1.to_f / num2.to_f
            end
 
-  prompt"#{num1} #{operation} #{num2} = #{answer}"
+  puts "=> #{num1} #{operation} #{num2} = #{answer}"
 
-  prompt'Would you like to perform another operation? (Y to continue)'
+  prompt('another_operation')
   cont = gets.chomp.downcase
   break unless cont.start_with?('y')
 end
 
-prompt'Thanks for using the calculator, good bye!'
+prompt('thanks')
