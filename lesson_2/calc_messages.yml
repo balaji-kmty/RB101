@@ -1,0 +1,10 @@
+# Messages for the calculator program
+
+en:
+  welcome: 'Welcome to Calculator!'
+  invalid_input: 'Invalid input, try again: '
+  first_number: 'Enter first number: '
+  second_number: 'Enter second number: '
+  operation: 'Enter mathematical operation (+ - * /): '
+  another_operation: 'Would you like to perform another operation? (Y to continue)'
+  thanks: 'Thanks for using the calculator, good bye!'
