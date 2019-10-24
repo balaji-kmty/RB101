@@ -4,12 +4,15 @@ require 'pry'
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
+WINNING_COMBINATIONS = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7],
+                        [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]
 
-def prompt (message)
+def prompt(message)
   puts "=> #{message}"
 end
 
 # initialize and display board
+# rubocop:disable Metrics/AbcSize
 def display_board(brd)
   system 'clear'
   puts ""
@@ -26,15 +29,16 @@ def display_board(brd)
   puts "     |     |"
   puts ""
 end
+# rubocop:enable Metrics/AbcSize
 
 def initialize_board
   new_board = {}
-  (1..9).each {|num| new_board[num] = INITIAL_MARKER}
+  (1..9).each { |num| new_board[num] = INITIAL_MARKER }
   new_board
 end
 
 def empty_squares?(brd)
-  brd.keys.select {|num| brd[num] == INITIAL_MARKER}
+  brd.keys.select { |num| brd[num] == INITIAL_MARKER }
 end
 
 # prompt user for input
@@ -57,11 +61,10 @@ end
 
 # end game conditions
 def detect_winner(brd)
-  winning_combinations = [[1,2,3], [4,5,6], [7,8,9], [1,4,7], [2,5,8], [3,6,9], [1,5,9], [3,5,7]]
-  winning_combinations.each do |combination|
-    if brd[combination[0]] == PLAYER_MARKER && brd[combination[1]] == PLAYER_MARKER && brd[combination[2]] == PLAYER_MARKER
+  WINNING_COMBINATIONS.each do |combination|
+    if brd.values_at(*combination).count(PLAYER_MARKER) == 3
       return 'Player'
-    elsif brd[combination[0]] == COMPUTER_MARKER && brd[combination[1]] == COMPUTER_MARKER && brd[combination[2]] == COMPUTER_MARKER
+    elsif brd.values_at(*combination).count(COMPUTER_MARKER) == 3
       return 'Computer'
     end
   end
