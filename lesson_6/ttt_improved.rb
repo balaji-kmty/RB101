@@ -136,20 +136,20 @@ loop do
   board = initialize_board
 
   current_player = case TURN
-  when 'choose'
-    prompt "Who goes first? Enter 'player' or 'computer'"
-    input = ''
-    loop do
-      input = gets.chomp.downcase
-      if input == 'player' || input == 'computer'
-        break
-      else
-        prompt "Invalid input, enter 'player' or 'computer'"
-      end
-    end
-    input
-  else TURN
-  end
+                   when 'choose'
+                     prompt "Who goes first? Enter 'player' or 'computer'"
+                     input = ''
+                     loop do
+                       input = gets.chomp.downcase
+                       if input == 'player' || input == 'computer'
+                         break
+                       else
+                         prompt "Invalid input, enter 'player' or 'computer'"
+                       end
+                     end
+                     input
+                   else TURN
+                   end
 
   loop do
     display_board(board)
@@ -194,5 +194,7 @@ end
 # What happens if the board is 5x5 instead of 3x3? What about a 9x9 board?
 #
 # More players
-# 
-# When you have a bigger board, you can perhaps add more than 2 players. Would it be interesting to play against 2 computers? What about 2 human players against a computer?
+#
+# When you have a bigger board, you can perhaps add more than 2 players.
+# Would it be interesting to play against 2 computers? What about 2 human
+# players against a computer?
