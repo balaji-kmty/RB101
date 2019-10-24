@@ -1,4 +1,4 @@
-# tic tac toe
+# tic tac toe with dumb computer 
 require 'pry'
 
 INITIAL_MARKER = ' '
