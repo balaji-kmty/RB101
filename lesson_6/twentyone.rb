@@ -1,5 +1,10 @@
 # Twenty-one (simplified blackjack)
 
+MAX = 21
+MIN = 17
+player_wins = 0
+dealer_wins = 0
+
 def prompt(message)
   puts "=> #{message}"
 end
@@ -63,9 +68,38 @@ def cards_total(cards)
 
   # correct Ace value if necessary
   values.select { |value| value == 'Ace' }.count.times do
-    total -= 10 if total > 21
+    total -= 10 if total > MAX
   end
   total
+end
+
+def display_result(plyr_total, dlr_total)
+  if plyr_total > 21
+    prompt "You bust, dealer wins."
+  elsif plyr_total > dlr_total
+    prompt "Player wins!"
+  elsif plyr_total == dlr_total
+    prompt "It's a tie"
+  elsif dlr_total > MAX
+    prompt "Dealer busts, player wins!"
+  else
+    prompt "Dealer wins."
+  end
+end
+
+def score(plyr_total, dlr_total, plyr_wins, dlr_wins)
+  if plyr_total > 21
+    dlr_wins += 1
+  elsif plyr_total > dlr_total
+    plyr_wins += 1
+  elsif plyr_total == dlr_total
+    nil
+  elsif dlr_total > MAX
+    plyr_wins += 1
+  else
+    dlr_wins += 1
+  end
+  return plyr_wins, dlr_wins
 end
 
 prompt "Welcome to 21. Starting game now..."
@@ -91,7 +125,7 @@ loop do
       display_cards(player_cards, dealer_cards)
       player_total = cards_total(player_cards)
       prompt " Card total is #{player_total}"
-      break if cards_total(player_cards) > 21
+      break if player_total > MAX
     elsif hit_stay == 's'
       break
     else
@@ -100,31 +134,27 @@ loop do
   end
 
   # dealer turn logic
-  if player_total > 21
-    prompt "You bust, dealer wins."
+  if player_total > MAX
+    display_result(player_total, dealer_total)
   else
     loop do
-      player_total = cards_total(player_cards)
       dealer_total = cards_total(dealer_cards)
       display_cards(player_cards, dealer_cards, 'dealer')
       prompt "Dealer: #{dealer_total} Player: #{player_total}"
-      break if dealer_total >= 17 || dealer_total > 21
+      break if dealer_total >= MIN || dealer_total > MAX ||
+               dealer_total > player_total
       prompt "Dealer hits..."
       sleep(2)
       hit!(deck, dealer_cards)
     end
 
-    # win logic
-    if player_total > dealer_total
-      prompt "Player wins!"
-    elsif player_total == dealer_total
-      prompt "It's a tie"
-    elsif dealer_total > 21
-      prompt "Dealer busts, player wins!"
-    else
-      prompt "Dealer wins."
-    end
+    display_result(player_total, dealer_total)
+    player_wins, dealer_wins =
+      score(player_total, dealer_total, player_wins, dealer_wins)
   end
+
+  prompt "Score: Dealer at #{dealer_wins} and Player at #{player_wins}"
+  break if player_total == 5 || dealer_total == 5
 
   # play again?
   loop do
